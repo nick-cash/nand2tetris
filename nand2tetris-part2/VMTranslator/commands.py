@@ -1,12 +1,12 @@
 """Methods that generate Hack assembly from provided VM code."""
 
-from collections import defaultdict
 from instructions import dec_sp, inc_sp, set_d, d_equals_sp, \
     a_equals_sp, sp_equals_d, d_equals_a_minus_d, d_equals_d_plus_a, \
-    d_equals_neg_d, jump, d_jeq
+    d_equals_neg_d, jump, d_jeq, d_jgt, d_jlt, d_equals_not_d, \
+    d_equals_d_and_a, d_equals_d_or_a
 
 
-label_counter = defaultdict(int)
+if_counter = 0
 
 TRUE = -1   # 0xFFFF
 FALSE = 0   # 0x0000
@@ -40,6 +40,29 @@ def unary(function):
     return wrapper
 
 
+def conditional(function):
+    """Automate label generation and branching."""
+    def wrapper(*args, **kwargs):
+        global if_counter
+
+        counter = if_counter
+        if_counter += 1
+
+        true_label = "(IF_TRUE_%d)" % counter
+        end_label = "(IF_END_%d)" % counter
+
+        return [
+            d_equals_a_minus_d(),   # D=A-D
+            function(true_label),   # Some type of jump
+            set_d(FALSE),           # D=FALSE
+            jump(end_label),        # JMP end_label
+            true_label,
+            set_d(TRUE),            # D=TRUE
+            end_label,
+        ]
+    return wrapper
+
+
 @binary
 def add():
     """Assembly for add commands."""
@@ -58,24 +81,43 @@ def neg():
     return [d_equals_neg_d()]   # D=-D
 
 
+@unary
+def bitwise_not():
+    """Assembly for not commands."""
+    return [d_equals_not_d()]     # D=!D
+
+
 @binary
-def eq():
+def bitwise_and():
+    """Assembly for and commands."""
+    return [d_equals_d_and_a()]     # D=D&A
+
+
+@binary
+def bitwise_or():
+    """Assembly for or commands."""
+    return [d_equals_d_or_a()]     # D=D|A
+
+
+@binary
+@conditional
+def eq(true_label):
     """Assembly for eq commands."""
-    counter = label_counter["eq"]
-    label_counter["eq"] += 1
+    return d_jeq(true_label)    # @true_label -> D;JEQ
 
-    true_label = "(EQ_TRUE_%d)" % counter
-    end_label = "(EQ_END_%d)" % counter
 
-    return [
-        d_equals_a_minus_d(),   # D=A-D
-        d_jeq(true_label),      # @true_label -> D;JEQ
-        set_d(FALSE),           # D=FALSE
-        jump(end_label),        # JMP end_label
-        true_label,
-        set_d(TRUE),            # D=TRUE
-        end_label,
-    ]
+@binary
+@conditional
+def gt(true_label):
+    """Assembly for gt commands."""
+    return d_jgt(true_label)    # @true_label -> D;JGT
+
+
+@binary
+@conditional
+def lt(true_label):
+    """Assembly for lt commands."""
+    return d_jlt(true_label)    # @true_label -> D;JLT
 
 
 def push(segment, index):

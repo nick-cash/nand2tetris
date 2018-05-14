@@ -9,12 +9,12 @@ command_list = {
     "add": commands.add,
     "sub": commands.sub,
     "neg": commands.neg,
+    "and": commands.bitwise_and,
+    "or": commands.bitwise_or,
+    "not": commands.bitwise_not,
     "eq": commands.eq,
-    "gt": None,
-    "lt": None,
-    "and": None,
-    "or": None,
-    "not": None,
+    "gt": commands.gt,
+    "lt": commands.lt,
 
     # memory access
     "push": commands.push,

@@ -65,6 +65,30 @@ def d_equals_neg_d():
     return ["D=-D"]
 
 
+@instruction("!D")
+def d_equals_not_d():
+    """Instruction set for D=!D."""
+    return [
+        "D=!D",
+    ]
+
+
+@instruction("D=D&A")
+def d_equals_d_and_a():
+    """Instruction set for D=D&A."""
+    return [
+        "D=D&A",
+    ]
+
+
+@instruction("D=D|A")
+def d_equals_d_or_a():
+    """Instruction set for D=D|A."""
+    return [
+        "D=D|A",
+    ]
+
+
 @instruction("A=*SP")
 def a_equals_sp():
     """Instruction set for A=*SP."""
@@ -95,6 +119,18 @@ def jump(label_or_address):
 def d_jeq(label_or_address):
     """Instruction set for D;JEQ."""
     return generate_jump("D", "JEQ", label_or_address)
+
+
+@instruction("JMP to label_or_address if D > 0")
+def d_jgt(label_or_address):
+    """Instruction set for D;JGT."""
+    return generate_jump("D", "JGT", label_or_address)
+
+
+@instruction("JMP to label_or_address if D < 0")
+def d_jlt(label_or_address):
+    """Instruction set for D;JGT."""
+    return generate_jump("D", "JLT", label_or_address)
 
 
 def generate_jump(condition, jump_type, label_or_address):
