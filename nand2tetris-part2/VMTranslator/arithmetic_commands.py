@@ -6,9 +6,6 @@ from instructions import dec_sp, inc_sp, d_equals_sp, \
     d_equals_d_and_a, d_equals_d_or_a
 
 
-TRUE = -1   # 0xFFFF
-FALSE = 0   # 0x0000
-
 if_counter = 0
 
 
@@ -60,10 +57,10 @@ def conditional(function):
         return [
             d_equals_a_minus_d(),   # D=A-D
             function(true_label),   # Some type of jump
-            ["D=0"],                # D=FALSE
+            ["D=0"],                # D=FALSE (0, 0x0000)
             jump(end_label),        # JMP end_label
             ["(%s)" % true_label],
-            ["D=-1"],               # D=TRUE
+            ["D=-1"],               # D=TRUE (-1, 0xFFFF)
             ["(%s)" % end_label],
         ]
     return wrapper
