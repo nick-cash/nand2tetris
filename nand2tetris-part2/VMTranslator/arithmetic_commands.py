@@ -1,42 +1,48 @@
-"""Methods that generate Hack assembly from provided VM code."""
+"""Hack assembly generators for arithmetic VM code."""
 
-from instructions import dec_sp, inc_sp, set_d, d_equals_sp, \
+from instructions import dec_sp, inc_sp, d_equals_sp, \
     a_equals_sp, sp_equals_d, d_equals_a_minus_d, d_equals_d_plus_a, \
     d_equals_neg_d, jump, d_jeq, d_jgt, d_jlt, d_equals_not_d, \
     d_equals_d_and_a, d_equals_d_or_a
 
 
-if_counter = 0
-
 TRUE = -1   # 0xFFFF
 FALSE = 0   # 0x0000
 
+if_counter = 0
 
-def binary(function):
-    """Automate stack handling for binary comands. A=X, D=Y."""
+
+def update_sp(function):
+    """Automate incrementing the stack pointer."""
     def wrapper(*args, **kwargs):
-        return [
-            dec_sp(),               # SP--
-            d_equals_sp(),          # D=*SP
-            dec_sp(),               # SP--
-            a_equals_sp(),          # A=*SP
-        ] + function(*args, **kwargs) + [
+        return function(*args, **kwargs) + [
             sp_equals_d(),          # *SP=D
             inc_sp(),               # SP++
         ]
     return wrapper
 
 
-def unary(function):
-    """Automate stack handling for unary comands. Y=D."""
+def binary(function):
+    """Automate stack handling for binary comands. A=X, D=Y."""
+    @update_sp
     def wrapper(*args, **kwargs):
         return [
             dec_sp(),               # SP--
             d_equals_sp(),          # D=*SP
-        ] + function(*args, **kwargs) + [
-            sp_equals_d(),          # *SP=D
-            inc_sp(),               # SP++
-        ]
+            dec_sp(),               # SP--
+            a_equals_sp(),          # A=*SP
+        ] + function(*args, **kwargs)
+    return wrapper
+
+
+def unary(function):
+    """Automate stack handling for unary comands. Y=D."""
+    @update_sp
+    def wrapper(*args, **kwargs):
+        return [
+            dec_sp(),               # SP--
+            d_equals_sp(),          # D=*SP
+        ] + function(*args, **kwargs)
     return wrapper
 
 
@@ -118,20 +124,3 @@ def gt(true_label):
 def lt(true_label):
     """Assembly for lt commands."""
     return d_jlt(true_label)    # @true_label -> D;JLT
-
-
-def push(segment, index):
-    """Assembly for push commands."""
-    if segment == "constant":
-        return [
-            set_d(index),   # D=index
-            sp_equals_d(),  # *SP=D
-            inc_sp(),       # SP++
-        ]
-
-    print "Push: Unhandled segment '%s'" % segment
-
-
-def pop(segment, index):
-    """Assembly for pop commands."""
-    pass

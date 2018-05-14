@@ -2,23 +2,24 @@
 
 import sys
 import itertools
-import commands
+import arithmetic_commands
+import memory_access_commands
 
 command_list = {
     # arithmetic
-    "add": commands.add,
-    "sub": commands.sub,
-    "neg": commands.neg,
-    "and": commands.bitwise_and,
-    "or": commands.bitwise_or,
-    "not": commands.bitwise_not,
-    "eq": commands.eq,
-    "gt": commands.gt,
-    "lt": commands.lt,
+    "add": arithmetic_commands.add,
+    "sub": arithmetic_commands.sub,
+    "neg": arithmetic_commands.neg,
+    "and": arithmetic_commands.bitwise_and,
+    "or": arithmetic_commands.bitwise_or,
+    "not": arithmetic_commands.bitwise_not,
+    "eq": arithmetic_commands.eq,
+    "gt": arithmetic_commands.gt,
+    "lt": arithmetic_commands.lt,
 
     # memory access
-    "push": commands.push,
-    "pop": commands.pop,
+    "push": memory_access_commands.push,
+    "pop": memory_access_commands.pop,
 }
 
 
