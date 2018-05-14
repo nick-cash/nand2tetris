@@ -41,14 +41,6 @@ M=D
 M=M+1
 
 // VM Code: pop static 8
-// D=integer
-@0
-D=A
-@StaticTest.8
-D=D+M
-@R15
-M=D
-
 // SP--
 @SP
 M=M-1
@@ -57,19 +49,10 @@ M=M-1
 @SP
 A=M
 D=M
-@R15
-A=M
+@StaticTest.8
 M=D
 
 // VM Code: pop static 3
-// D=integer
-@0
-D=A
-@StaticTest.3
-D=D+M
-@R15
-M=D
-
 // SP--
 @SP
 M=M-1
@@ -78,19 +61,10 @@ M=M-1
 @SP
 A=M
 D=M
-@R15
-A=M
+@StaticTest.3
 M=D
 
 // VM Code: pop static 1
-// D=integer
-@0
-D=A
-@StaticTest.1
-D=D+M
-@R15
-M=D
-
 // SP--
 @SP
 M=M-1
@@ -99,16 +73,11 @@ M=M-1
 @SP
 A=M
 D=M
-@R15
-A=M
+@StaticTest.1
 M=D
 
 // VM Code: push static 3
-// D=integer
-@0
-D=A
 @StaticTest.3
-A=D+M
 D=M
 
 // *SP=D
@@ -121,11 +90,7 @@ M=D
 M=M+1
 
 // VM Code: push static 1
-// D=integer
-@0
-D=A
 @StaticTest.1
-A=D+M
 D=M
 
 // *SP=D
@@ -169,11 +134,7 @@ M=D
 M=M+1
 
 // VM Code: push static 8
-// D=integer
-@0
-D=A
 @StaticTest.8
-A=D+M
 D=M
 
 // *SP=D
