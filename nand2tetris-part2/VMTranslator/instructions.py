@@ -1,4 +1,4 @@
-"""Methods that generate Hack assembly from provided VM code."""
+"""Instructions sets for Hack assembly."""
 
 
 def instruction(comment):
@@ -10,52 +10,6 @@ def instruction(comment):
     return decorator
 
 
-def binary(function):
-    """Automate stack handling for binary comands. A=X, D=Y."""
-    def wrapper(*args, **kwargs):
-        return [
-            dec_sp(),               # SP--
-            d_equals_sp(),          # D=*SP
-            dec_sp(),               # SP--
-            a_equals_sp(),          # A=*SP
-        ] + function(*args, **kwargs) + [
-            sp_equals_d(),          # *SP=D
-            inc_sp(),               # SP++
-        ]
-    return wrapper
-
-
-# Commands
-@binary
-def add():
-    """Assembly for add commands."""
-    return [d_equals_d_plus_a()]    # D=D+A
-
-
-@binary
-def sub():
-    """Assembly for sub commands."""
-    return [d_equals_a_minus_d()]   # D=A-D
-
-
-def push(segment, index):
-    """Assembly for push commands."""
-    if segment == "constant":
-        return [
-            set_d(index),   # D=index
-            sp_equals_d(),  # *SP=D
-            inc_sp(),       # SP++
-        ]
-
-    print "Push: Unhandled segment '%s'" % segment
-
-
-def pop(segment, index):
-    """Assembly for pop commands."""
-    pass
-
-
-# Instructions
 @instruction("SP++")
 def inc_sp():
     """Instruction set for SP++."""
@@ -105,6 +59,12 @@ def d_equals_a_minus_d():
     return ["D=A-D"]
 
 
+@instruction("D=-D")
+def d_equals_neg_d():
+    """Instruction set for D=-D."""
+    return ["D=-D"]
+
+
 @instruction("A=*SP")
 def a_equals_sp():
     """Instruction set for A=*SP."""
@@ -122,4 +82,24 @@ def sp_equals_d():
         "@SP",
         "A=M",
         "M=D",
+    ]
+
+
+@instruction("JMP to label_or_address")
+def jump(label_or_address):
+    """Instruction set for JMP."""
+    return generate_jump("0", "JMP", label_or_address)
+
+
+@instruction("JMP to label_or_address if D == 0")
+def d_jeq(label_or_address):
+    """Instruction set for D;JEQ."""
+    return generate_jump("D", "JEQ", label_or_address)
+
+
+def generate_jump(condition, jump_type, label_or_address):
+    """Generate all types of jump instruction sets."""
+    return [
+        "@%s" % label_or_address,
+        "%s;%s" % condition, jump_type,
     ]

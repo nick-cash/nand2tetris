@@ -2,14 +2,14 @@
 
 import sys
 import itertools
-import generators
+import commands
 
-commands = {
+command_list = {
     # arithmetic
-    "add": generators.add,
-    "sub": generators.sub,
-    "neg": None,
-    "eq": None,
+    "add": commands.add,
+    "sub": commands.sub,
+    "neg": commands.neg,
+    "eq": commands.eq,
     "gt": None,
     "lt": None,
     "and": None,
@@ -17,8 +17,8 @@ commands = {
     "not": None,
 
     # memory access
-    "push": generators.push,
-    "pop": generators.pop,
+    "push": commands.push,
+    "pop": commands.pop,
 }
 
 
@@ -26,13 +26,11 @@ def translate(line):
     """Translate a line of VM code into Hack assembly."""
     command = line.split()[0]
 
-    if command not in commands:
+    if command not in command_list:
         print "Line '%s' contains an invalid command. Bailing out..." % line
         sys.exit()
 
-    print list(itertools.chain(*commands[command](*(line.split()[1:]))))
-
-    return list(itertools.chain(*commands[command](*(line.split()[1:]))))
+    return list(itertools.chain(*command_list[command](*(line.split()[1:]))))
 
 
 if __name__ == "__main__":
