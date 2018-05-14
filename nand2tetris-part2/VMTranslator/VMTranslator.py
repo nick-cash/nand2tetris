@@ -7,7 +7,7 @@ import generators
 commands = {
     # arithmetic
     "add": generators.add,
-    "sub": None,
+    "sub": generators.sub,
     "neg": None,
     "eq": None,
     "gt": None,
@@ -30,6 +30,8 @@ def translate(line):
         print "Line '%s' contains an invalid command. Bailing out..." % line
         sys.exit()
 
+    print list(itertools.chain(*commands[command](*(line.split()[1:]))))
+
     return list(itertools.chain(*commands[command](*(line.split()[1:]))))
 
 
@@ -50,5 +52,7 @@ if __name__ == "__main__":
     # Generate assembly
     with open(in_file.replace(".vm", ".asm"), "w") as f:
         for line in program_lines:
-                f.write("// VM Code: " + line + "\n")
+                if line != program_lines[0]:
+                    f.write("\n\n")
+                f.write("// VM Code: " + line)
                 f.write("\n".join(translate(line)))

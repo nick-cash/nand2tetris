@@ -10,18 +10,32 @@ def instruction(comment):
     return decorator
 
 
+def binary(function):
+    """Automate stack handling for binary comands. A=X, D=Y."""
+    def wrapper(*args, **kwargs):
+        return [
+            dec_sp(),               # SP--
+            d_equals_sp(),          # D=*SP
+            dec_sp(),               # SP--
+            a_equals_sp(),          # A=*SP
+        ] + function(*args, **kwargs) + [
+            sp_equals_d(),          # *SP=D
+            inc_sp(),               # SP++
+        ]
+    return wrapper
+
+
 # Commands
+@binary
 def add():
     """Assembly for add commands."""
-    return [
-        dec_sp(),               # SP--
-        d_equals_sp(),          # D=*SP
-        dec_sp(),               # SP--
-        a_equals_sp(),          # A=*SP
-        d_equals_d_plus_a(),    # D=D+A
-        sp_equals_d(),          # *SP=D
-        inc_sp(),               # SP++
-    ]
+    return [d_equals_d_plus_a()]    # D=D+A
+
+
+@binary
+def sub():
+    """Assembly for sub commands."""
+    return [d_equals_a_minus_d()]   # D=A-D
 
 
 def push(segment, index):
@@ -83,6 +97,12 @@ def d_equals_sp():
 def d_equals_d_plus_a():
     """Instruction set for D=D+A."""
     return ["D=D+A"]
+
+
+@instruction("D=A-D")
+def d_equals_a_minus_d():
+    """Instruction set for D=A-D."""
+    return ["D=A-D"]
 
 
 @instruction("A=*SP")
