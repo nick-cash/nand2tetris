@@ -68,25 +68,19 @@ def d_equals_neg_d():
 @instruction("!D")
 def d_equals_not_d():
     """Instruction set for D=!D."""
-    return [
-        "D=!D",
-    ]
+    return ["D=!D"]
 
 
 @instruction("D=D&A")
 def d_equals_d_and_a():
     """Instruction set for D=D&A."""
-    return [
-        "D=D&A",
-    ]
+    return ["D=D&A"]
 
 
 @instruction("D=D|A")
 def d_equals_d_or_a():
     """Instruction set for D=D|A."""
-    return [
-        "D=D|A",
-    ]
+    return ["D=D|A"]
 
 
 @instruction("A=*SP")
