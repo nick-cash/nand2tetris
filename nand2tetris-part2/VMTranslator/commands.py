@@ -48,17 +48,17 @@ def conditional(function):
         counter = if_counter
         if_counter += 1
 
-        true_label = "(IF_TRUE_%d)" % counter
-        end_label = "(IF_END_%d)" % counter
+        true_label = "IF_TRUE_%d" % counter
+        end_label = "IF_END_%d" % counter
 
         return [
             d_equals_a_minus_d(),   # D=A-D
             function(true_label),   # Some type of jump
-            set_d(FALSE),           # D=FALSE
+            ["D=0"],                # D=FALSE
             jump(end_label),        # JMP end_label
-            true_label,
-            set_d(TRUE),            # D=TRUE
-            end_label,
+            ["(%s)" % true_label],
+            ["D=-1"],               # D=TRUE
+            ["(%s)" % end_label],
         ]
     return wrapper
 

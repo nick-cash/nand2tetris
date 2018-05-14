@@ -137,5 +137,5 @@ def generate_jump(condition, jump_type, label_or_address):
     """Generate all types of jump instruction sets."""
     return [
         "@%s" % label_or_address,
-        "%s;%s" % condition, jump_type,
+        "%s;%s" % (condition, jump_type),
     ]
