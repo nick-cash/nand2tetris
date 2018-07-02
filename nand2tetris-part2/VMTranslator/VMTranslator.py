@@ -2,6 +2,7 @@
 
 import sys
 import itertools
+import flow_commands
 import arithmetic_commands
 import memory_access_commands
 
@@ -22,9 +23,9 @@ command_list = {
     "pop": memory_access_commands.pop,
 
     # program flow
-    "label": None,
-    "goto": None,
-    "if-goto": None,
+    "label": flow_commands.label,
+    "goto": flow_commands.goto,
+    "if-goto": flow_commands.if_goto,
 }
 
 
@@ -48,7 +49,8 @@ if __name__ == "__main__":
 
     # Get our input lines; drop all comments and blank lines
     with open(in_file, "r") as f:
-        program_lines = [line.strip() for line in f.read().split("\n")
+        program_lines = [line.split("//")[0].strip()
+                         for line in f.read().split("\n")
                          if line.strip() != "" and line[:2] != "//"]
 
     # Generate assembly

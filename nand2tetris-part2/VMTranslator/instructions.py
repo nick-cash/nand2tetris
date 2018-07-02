@@ -103,6 +103,12 @@ def sp_equals_d():
     ]
 
 
+@instruction("Emit Label")
+def emit_label(label):
+    """Write a label."""
+    return ["(%s)" % label]
+
+
 @instruction("JMP to label_or_address")
 def jump(label_or_address):
     """Instruction set for JMP."""
@@ -113,6 +119,12 @@ def jump(label_or_address):
 def d_jeq(label_or_address):
     """Instruction set for D;JEQ."""
     return generate_jump("D", "JEQ", label_or_address)
+
+
+@instruction("JMP to label_or_address if D != 0")
+def d_jneq(label_or_address):
+    """Instruction set for D;JEQ."""
+    return generate_jump("D", "JNE", label_or_address)
 
 
 @instruction("JMP to label_or_address if D > 0")

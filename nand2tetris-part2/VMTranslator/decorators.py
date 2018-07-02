@@ -1,6 +1,6 @@
 """Decorators used for translating commands into Hack assembly instructions."""
 from instructions import dec_sp, inc_sp, d_equals_sp, sp_equals_d, jump, \
-    a_equals_sp, d_equals_a_minus_d
+    a_equals_sp, d_equals_a_minus_d, emit_label
 
 
 if_counter = 0
@@ -56,8 +56,8 @@ def conditional(function):
             function(true_label),   # Some type of jump
             ["D=0"],                # D=FALSE (0, 0x0000)
             jump(end_label),        # JMP end_label
-            ["(%s)" % true_label],
+            emit_label(true_label),
             ["D=-1"],               # D=TRUE (-1, 0xFFFF)
-            ["(%s)" % end_label],
+            emit_label(end_label),
         ]
     return wrapper
