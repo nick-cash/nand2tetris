@@ -20,6 +20,11 @@ command_list = {
     # memory access
     "push": memory_access_commands.push,
     "pop": memory_access_commands.pop,
+
+    # program flow
+    "label": None,
+    "goto": None,
+    "if-goto": None,
 }
 
 

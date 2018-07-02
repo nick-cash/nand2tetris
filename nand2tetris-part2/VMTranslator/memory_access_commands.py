@@ -1,6 +1,6 @@
 """Hack assembly generators for memory map VM code."""
 import sys
-from arithmetic_commands import update_sp
+from decorators import update_sp
 from instructions import set_d, dec_sp, d_equals_sp
 
 
