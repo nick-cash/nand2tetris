@@ -30,6 +30,6 @@ sysinfo.txt
 *.unitypackage
 
 # Mac
-.DS_Stor
+.DS_Store
 
 *.pyc
